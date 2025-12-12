@@ -7,10 +7,37 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <div id="app">
-      <h1>食べログ × Google Map</h1>
-      <p>Phase 5で実装予定</p>
+    <div class="popup">
+      <header class="header">
+        <h1>食べログ × Google Map</h1>
+      </header>
+
+      <main class="content">
+        <div class="status-card" id="status-card">
+          <div class="status-icon" id="status-icon">✓</div>
+          <div class="status-text">
+            <div class="status-label" id="status-label">動作モード</div>
+            <div class="status-value" id="status-value">リンクのみ</div>
+          </div>
+        </div>
+
+        <p class="description">
+          食べログの店舗ページでGoogle Mapの情報を確認できます。
+        </p>
+
+        <button type="button" id="settings-btn" class="settings-btn">
+          設定を開く
+        </button>
+      </main>
+
+      <footer class="footer">
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+          >GitHub</a
+        >
+        <span class="version">v1.0.0</span>
+      </footer>
     </div>
+
     <script type="module" src="popup.ts"></script>
   </body>
 </html>
