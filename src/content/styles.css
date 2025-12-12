@@ -1,0 +1,127 @@
+/* Google Mapリンクボタン */
+.tgm-container {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px;
+  vertical-align: middle;
+}
+
+.tgm-link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #4285f4;
+  color: white !important;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none !important;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.tgm-link-button:hover {
+  background: #3367d6;
+  text-decoration: none !important;
+}
+
+.tgm-link-button:visited {
+  color: white !important;
+}
+
+.tgm-link-button::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+/* 評価表示（Phase 4で使用） */
+.tgm-rating-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+  vertical-align: middle;
+}
+
+.tgm-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #f8f9fa;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.tgm-rating-star {
+  color: #fbbc04;
+}
+
+.tgm-rating-value {
+  font-weight: 600;
+  color: #202124;
+}
+
+.tgm-rating-count {
+  color: #5f6368;
+  font-size: 12px;
+}
+
+.tgm-rating-link {
+  color: #4285f4;
+  text-decoration: none;
+  font-size: 12px;
+}
+
+.tgm-rating-link:hover {
+  text-decoration: underline;
+}
+
+/* ローディング状態 */
+.tgm-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 12px;
+  color: #5f6368;
+  font-size: 13px;
+}
+
+.tgm-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #e8eaed;
+  border-top-color: #4285f4;
+  border-radius: 50%;
+  animation: tgm-spin 0.8s linear infinite;
+}
+
+@keyframes tgm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* エラー・見つからない状態 */
+.tgm-not-found {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+  font-size: 13px;
+  color: #5f6368;
+}
+
+.tgm-error {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+  font-size: 13px;
+  color: #d93025;
+}
