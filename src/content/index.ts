@@ -1,6 +1,8 @@
+import type { Message, MessageResponse, PlaceResult } from '@/types';
 import { parseRestaurantPage, isRestaurantDetailPage } from './parser';
 import { generateGoogleMapsSearchUrl } from '@/utils/url';
-import { injectUI } from './ui';
+import { getApiKey, getApiKeyStatus } from '@/utils/storage';
+import { injectUI, updateUI } from './ui';
 import './styles.css';
 
 /**
@@ -23,12 +25,49 @@ async function main(): Promise<void> {
 
   console.log('[Tabelog x Google Map] Parsed info:', info);
 
-  // Google Maps URLを生成
+  // Google Maps URLを生成（フォールバック用）
   const googleMapsUrl = generateGoogleMapsSearchUrl(info.name, info.address);
 
-  // TODO: Phase 4でAPIキーの確認を追加
-  // 現在はリンクのみモードで動作
-  injectUI({ mode: 'link-only', url: googleMapsUrl });
+  // APIキーの確認
+  const apiKey = await getApiKey();
+  const apiKeyStatus = await getApiKeyStatus();
+
+  // APIキーが設定されていない、または無効な場合はリンクのみ
+  if (!apiKey || !apiKeyStatus.isValid) {
+    console.log('[Tabelog x Google Map] No valid API key, using link-only mode');
+    injectUI({ mode: 'link-only', url: googleMapsUrl });
+    return;
+  }
+
+  // APIキーがある場合は評価を取得
+  console.log('[Tabelog x Google Map] API key found, fetching rating');
+  injectUI({ mode: 'loading' });
+
+  try {
+    const message: Message = { type: 'SEARCH_PLACE', payload: info };
+    const response = await chrome.runtime.sendMessage(message) as MessageResponse;
+
+    if (response.success && 'data' in response) {
+      const result = response.data as PlaceResult;
+      console.log('[Tabelog x Google Map] Got rating:', result);
+      updateUI({ mode: 'rating', result, url: googleMapsUrl });
+    } else if (!response.success && 'error' in response) {
+      const error = response.error;
+      if (error === '店舗が見つかりませんでした') {
+        updateUI({ mode: 'not-found', url: googleMapsUrl });
+      } else {
+        console.warn('[Tabelog x Google Map] API error:', error);
+        updateUI({ mode: 'error', message: error, url: googleMapsUrl });
+      }
+    }
+  } catch (error) {
+    console.error('[Tabelog x Google Map] Error:', error);
+    updateUI({
+      mode: 'error',
+      message: 'エラーが発生しました',
+      url: googleMapsUrl,
+    });
+  }
 }
 
 // DOMContentLoadedで実行
