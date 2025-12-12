@@ -7,10 +7,102 @@
     <link rel="stylesheet" href="options.css" />
   </head>
   <body>
-    <div id="app">
+    <div class="container">
       <h1>食べログ × Google Map 設定</h1>
-      <p>Phase 3で実装予定</p>
+
+      <!-- 動作モード -->
+      <section class="section">
+        <h2>動作モード</h2>
+        <div class="mode-selector">
+          <label class="mode-option">
+            <input type="radio" name="mode" value="link-only" checked />
+            <span class="mode-label">リンクのみ（APIキー不要）</span>
+            <span class="mode-description"
+              >Google Mapへのリンクボタンを表示します</span
+            >
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="mode" value="rating" />
+            <span class="mode-label">評価を表示（APIキーが必要）</span>
+            <span class="mode-description"
+              >Google Mapの評価をページ内に表示します</span
+            >
+          </label>
+        </div>
+      </section>
+
+      <!-- APIキー設定 -->
+      <section class="section" id="api-key-section">
+        <h2>APIキー設定</h2>
+        <div class="api-key-input-group">
+          <input
+            type="password"
+            id="api-key-input"
+            placeholder="Google Places APIキーを入力"
+          />
+          <button type="button" id="toggle-visibility" class="btn-icon">
+            👁
+          </button>
+        </div>
+        <div class="api-key-actions">
+          <button type="button" id="validate-btn" class="btn btn-primary">
+            検証
+          </button>
+          <button type="button" id="save-btn" class="btn" disabled>保存</button>
+          <button type="button" id="remove-btn" class="btn btn-danger" disabled>
+            削除
+          </button>
+        </div>
+        <div id="api-key-status" class="status"></div>
+      </section>
+
+      <!-- APIキー取得方法 -->
+      <section class="section collapsible">
+        <h2>
+          <button type="button" class="collapse-toggle" id="guide-toggle">
+            APIキーの取得方法
+            <span class="collapse-icon">▼</span>
+          </button>
+        </h2>
+        <div class="collapse-content" id="guide-content">
+          <ol class="guide-steps">
+            <li>
+              <a
+                href="https://console.cloud.google.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Google Cloud Console</a
+              >
+              にアクセス
+            </li>
+            <li>新しいプロジェクトを作成（または既存のプロジェクトを選択）</li>
+            <li>
+              「APIとサービス」→「ライブラリ」から
+              <strong>Places API (New)</strong> を有効化
+            </li>
+            <li>
+              「APIとサービス」→「認証情報」→「認証情報を作成」→「APIキー」
+            </li>
+            <li>作成されたAPIキーをコピーして上の入力欄に貼り付け</li>
+          </ol>
+          <p class="guide-note">
+            💡 月$200の無料クレジットがあるため、個人利用では通常料金は発生しません
+          </p>
+        </div>
+      </section>
+
+      <!-- キャッシュ管理 -->
+      <section class="section">
+        <h2>キャッシュ</h2>
+        <p class="cache-info">
+          保存件数: <span id="cache-count">0</span>件
+        </p>
+        <button type="button" id="clear-cache-btn" class="btn">
+          キャッシュをクリア
+        </button>
+      </section>
     </div>
+
     <script type="module" src="options.ts"></script>
   </body>
 </html>
