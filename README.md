@@ -11,6 +11,8 @@
 
 ### 開発版（ローカル）
 
+#### 1. ビルド
+
 ```bash
 # 依存関係のインストール
 pnpm install
@@ -19,18 +21,33 @@ pnpm install
 pnpm build
 ```
 
-1. Chromeで `chrome://extensions` を開く
-2. 右上の「デベロッパーモード」をONにする
-3. 「パッケージ化されていない拡張機能を読み込む」をクリック
-4. `dist` フォルダを選択
+#### 2. Chromeに読み込む
 
-### 開発モード
+1. Chromeのアドレスバーに `chrome://extensions` と入力してEnter
+2. 右上の「デベロッパーモード」のトグルをONにする
+3. 「パッケージ化されていない拡張機能を読み込む」ボタンをクリック
+4. このプロジェクトの `dist` フォルダを選択
+
+#### 3. 更新・リロード
+
+コードを変更した後は：
+
+1. `pnpm build` で再ビルド
+2. `chrome://extensions` で拡張機能の更新アイコン（↻）をクリック
+
+### 開発モード（ホットリロード）
 
 ```bash
 pnpm dev
 ```
 
-ファイル変更時に自動でリビルドされます。
+ファイル変更時に自動でリビルドされます。ただし、Chromeへの反映には `chrome://extensions` で更新アイコンをクリックする必要があります。
+
+### デバッグ
+
+- **ポップアップ**: ポップアップを開いて右クリック →「検証」→ Console
+- **Content Script**: 食べログのページでF12 → Console（`[Tabelog x Google Map]` で検索）
+- **Service Worker**: `chrome://extensions` → 拡張機能の「Service Worker」リンクをクリック
 
 ## 使い方
 
@@ -65,7 +82,7 @@ pnpm dev
 
 ## プロジェクト構成
 
-```
+```text
 src/
 ├── content/          # Content Script（食べログページに注入）
 │   ├── index.ts      # メインロジック
@@ -90,6 +107,12 @@ src/
 | [OPTION-A-API-KEY.md](docs/OPTION-A-API-KEY.md) | APIキー方式の詳細 |
 | [OPTION-B-LINK-ONLY.md](docs/OPTION-B-LINK-ONLY.md) | リンクのみ方式の詳細 |
 | [ADR](docs/adr/) | アーキテクチャ決定記録 |
+
+## 参考リンク
+
+- [Chrome拡張機能 公式チュートリアル](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world) - Hello World拡張機能の作り方
+- [ReactではじめるChrome拡張開発入門](https://zenn.dev/alvinvin/books/chrome_extension) - 日本語の詳しい解説
+- [How to Load an Unpacked Chrome Extension](https://devdiggers.com/how-to-load-an-unpacked-chrome-extension/) - ローカル読み込みの詳細手順
 
 ## ライセンス
 
