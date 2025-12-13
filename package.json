@@ -8,13 +8,18 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-  "keywords": ["chrome-extension", "tabelog", "google-maps"],
+  "keywords": [
+    "chrome-extension",
+    "tabelog",
+    "google-maps"
+  ],
   "author": "",
   "license": "MIT",
   "packageManager": "pnpm@10.18.0",
   "devDependencies": {
     "@crxjs/vite-plugin": "2.3.0",
     "@types/chrome": "^0.1.32",
+    "puppeteer": "^24.33.0",
     "typescript": "^5.9.3",
     "vite": "^7.2.7"
   }
