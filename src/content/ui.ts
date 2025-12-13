@@ -19,7 +19,7 @@ export function injectUI(state: UIState): void {
 
   const container = document.createElement('span');
   container.id = CONTAINER_ID;
-  container.innerHTML = renderUI(state);
+  renderUI(state, container);
 
   // 挿入先を探す
   const insertionPoint = findInsertionPoint();
@@ -36,7 +36,9 @@ export function injectUI(state: UIState): void {
 export function updateUI(state: UIState): void {
   const container = document.getElementById(CONTAINER_ID);
   if (container) {
-    container.innerHTML = renderUI(state);
+    // 既存の子要素をクリア
+    container.textContent = '';
+    renderUI(state, container);
   } else {
     injectUI(state);
   }
@@ -66,104 +68,164 @@ function findInsertionPoint(): Element | null {
 }
 
 /**
- * 状態に応じたHTMLをレンダリングする
+ * 状態に応じたUIをDOM APIでレンダリングする
  */
-function renderUI(state: UIState): string {
+function renderUI(state: UIState, container: HTMLElement): void {
   switch (state.mode) {
     case 'loading':
-      return renderLoading();
+      renderLoading(container);
+      break;
     case 'link-only':
-      return renderLinkOnly(state.url);
+      renderLinkOnly(state.url, container);
+      break;
     case 'rating':
-      return renderRating(state.result, state.url);
+      renderRating(state.result, state.url, container);
+      break;
     case 'not-found':
-      return renderNotFound(state.url);
+      renderNotFound(state.url, container);
+      break;
     case 'error':
-      return renderError(state.message, state.url);
-    default:
-      return '';
+      renderError(state.message, state.url, container);
+      break;
   }
 }
 
 /**
- * ローディング状態のHTML
+ * ローディング状態のUI
  */
-function renderLoading(): string {
-  return `
-    <span class="tgm-loading">
-      <span class="tgm-spinner"></span>
-      Google Map 評価を取得中...
-    </span>
-  `;
+function renderLoading(container: HTMLElement): void {
+  const span = document.createElement('span');
+  span.className = 'tgm-loading';
+
+  const spinner = document.createElement('span');
+  spinner.className = 'tgm-spinner';
+  span.appendChild(spinner);
+
+  span.appendChild(document.createTextNode('Google Map 評価を取得中...'));
+  container.appendChild(span);
 }
 
 /**
- * リンクのみのHTML
+ * リンクのみのUI
  */
-function renderLinkOnly(url: string): string {
-  return `
-    <span class="tgm-container">
-      <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="tgm-link-button">
-        Google Mapで見る
-      </a>
-    </span>
-  `;
+function renderLinkOnly(url: string, container: HTMLElement): void {
+  const span = document.createElement('span');
+  span.className = 'tgm-container';
+
+  const link = createSafeLink(url, 'Google Mapで見る', 'tgm-link-button');
+  span.appendChild(link);
+
+  container.appendChild(span);
 }
 
 /**
- * 評価表示のHTML
+ * 評価表示のUI
  */
-function renderRating(result: PlaceResult, url: string): string {
+function renderRating(result: PlaceResult, url: string, container: HTMLElement): void {
+  const ratingContainer = document.createElement('span');
+  ratingContainer.className = 'tgm-rating-container';
+
+  // 評価部分
+  const ratingSpan = document.createElement('span');
+  ratingSpan.className = 'tgm-rating';
+
+  // 星
+  const starSpan = document.createElement('span');
+  starSpan.className = 'tgm-rating-star';
   const stars = '★'.repeat(Math.round(result.rating));
   const emptyStars = '☆'.repeat(5 - Math.round(result.rating));
+  starSpan.textContent = stars + emptyStars;
+  ratingSpan.appendChild(starSpan);
 
-  return `
-    <span class="tgm-rating-container">
-      <span class="tgm-rating">
-        <span class="tgm-rating-star">${stars}${emptyStars}</span>
-        <span class="tgm-rating-value">${result.rating.toFixed(1)}</span>
-        <span class="tgm-rating-count">(${result.userRatingsTotal.toLocaleString()}件)</span>
-      </span>
-      <a href="${escapeHtml(result.googleMapsUrl || url)}" target="_blank" rel="noopener noreferrer" class="tgm-rating-link">
-        Google Mapで見る
-      </a>
-    </span>
-  `;
+  // 評価値
+  const valueSpan = document.createElement('span');
+  valueSpan.className = 'tgm-rating-value';
+  valueSpan.textContent = result.rating.toFixed(1);
+  ratingSpan.appendChild(valueSpan);
+
+  // レビュー数
+  const countSpan = document.createElement('span');
+  countSpan.className = 'tgm-rating-count';
+  countSpan.textContent = `(${result.userRatingsTotal.toLocaleString()}件)`;
+  ratingSpan.appendChild(countSpan);
+
+  ratingContainer.appendChild(ratingSpan);
+
+  // リンク
+  const linkUrl = result.googleMapsUrl || url;
+  const link = createSafeLink(linkUrl, 'Google Mapで見る', 'tgm-rating-link');
+  ratingContainer.appendChild(link);
+
+  container.appendChild(ratingContainer);
 }
 
 /**
- * 見つからない状態のHTML
+ * 見つからない状態のUI
  */
-function renderNotFound(url: string): string {
-  return `
-    <span class="tgm-not-found">
-      <span>Google Mapで該当なし</span>
-      <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="tgm-rating-link">
-        検索する
-      </a>
-    </span>
-  `;
+function renderNotFound(url: string, container: HTMLElement): void {
+  const span = document.createElement('span');
+  span.className = 'tgm-not-found';
+
+  const textSpan = document.createElement('span');
+  textSpan.textContent = 'Google Mapで該当なし';
+  span.appendChild(textSpan);
+
+  const link = createSafeLink(url, '検索する', 'tgm-rating-link');
+  span.appendChild(link);
+
+  container.appendChild(span);
 }
 
 /**
- * エラー状態のHTML
+ * エラー状態のUI
  */
-function renderError(message: string, url: string): string {
-  return `
-    <span class="tgm-error">
-      <span>${escapeHtml(message)}</span>
-      <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="tgm-rating-link">
-        Google Mapで検索
-      </a>
-    </span>
-  `;
+function renderError(message: string, url: string, container: HTMLElement): void {
+  const span = document.createElement('span');
+  span.className = 'tgm-error';
+
+  const textSpan = document.createElement('span');
+  textSpan.textContent = message; // textContentなのでXSS安全
+  span.appendChild(textSpan);
+
+  const link = createSafeLink(url, 'Google Mapで検索', 'tgm-rating-link');
+  span.appendChild(link);
+
+  container.appendChild(span);
 }
 
 /**
- * HTMLエスケープ
+ * 安全なリンク要素を作成する
+ * - URLはhttp/httpsのみ許可（javascript:等を防止）
+ * - target="_blank"にrel="noopener noreferrer"を付与
  */
-function escapeHtml(text: string): string {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+function createSafeLink(url: string, text: string, className: string): HTMLAnchorElement {
+  const link = document.createElement('a');
+
+  // URLの検証（http/httpsのみ許可）
+  if (isValidUrl(url)) {
+    link.href = url;
+  } else {
+    // 無効なURLの場合はGoogle検索にフォールバック
+    link.href = 'https://www.google.com/maps';
+    console.warn('[Tabelog x Google Map] Invalid URL blocked:', url);
+  }
+
+  link.target = '_blank';
+  link.rel = 'noopener noreferrer';
+  link.className = className;
+  link.textContent = text; // textContentなのでXSS安全
+
+  return link;
+}
+
+/**
+ * URLが有効（http/https）かどうかを検証する
+ */
+function isValidUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
