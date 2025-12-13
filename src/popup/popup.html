@@ -14,16 +14,32 @@
 
       <main class="content">
         <div class="status-card" id="status-card">
-          <div class="status-icon" id="status-icon">✓</div>
+          <div class="status-icon" id="status-icon">🔗</div>
           <div class="status-text">
-            <div class="status-label" id="status-label">動作モード</div>
+            <div class="status-label" id="status-label">現在のモード</div>
             <div class="status-value" id="status-value">リンクのみ</div>
           </div>
         </div>
 
-        <p class="description">
-          食べログの店舗ページでGoogle Mapの情報を確認できます。
-        </p>
+        <!-- 2つのモードの説明 -->
+        <div class="modes-info">
+          <div class="mode-item">
+            <div class="mode-icon">🔗</div>
+            <div class="mode-detail">
+              <div class="mode-name">リンクモード</div>
+              <div class="mode-desc">ボタンクリックでGoogle Mapを開く</div>
+            </div>
+            <div class="mode-badge" id="link-badge">使用中</div>
+          </div>
+          <div class="mode-item">
+            <div class="mode-icon">★</div>
+            <div class="mode-detail">
+              <div class="mode-name">評価表示モード</div>
+              <div class="mode-desc">評価を直接ページに表示</div>
+            </div>
+            <div class="mode-badge inactive" id="rating-badge">APIキー必要</div>
+          </div>
+        </div>
 
         <button type="button" id="settings-btn" class="settings-btn">
           設定を開く
@@ -31,9 +47,6 @@
       </main>
 
       <footer class="footer">
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer"
-          >GitHub</a
-        >
         <span class="version">v1.0.0</span>
       </footer>
     </div>

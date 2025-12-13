@@ -82,6 +82,79 @@ body {
   margin-bottom: 12px;
 }
 
+/* モード説明セクション */
+.modes-info {
+  margin-bottom: 12px;
+}
+
+.mode-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 6px;
+  background: #f8f9fa;
+  margin-bottom: 8px;
+}
+
+.mode-item:last-child {
+  margin-bottom: 0;
+}
+
+.mode-item.active {
+  background: #e6f4ea;
+  border: 1px solid #34a853;
+}
+
+.mode-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8eaed;
+  border-radius: 50%;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.mode-item.active .mode-icon {
+  background: #34a853;
+  color: white;
+}
+
+.mode-detail {
+  flex: 1;
+  min-width: 0;
+}
+
+.mode-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #202124;
+}
+
+.mode-desc {
+  font-size: 11px;
+  color: #5f6368;
+  margin-top: 2px;
+}
+
+.mode-badge {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background: #34a853;
+  color: white;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mode-badge.inactive {
+  background: #e8eaed;
+  color: #5f6368;
+}
+
 .settings-btn {
   width: 100%;
   padding: 10px 16px;
