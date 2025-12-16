@@ -43,6 +43,39 @@ async function captureScreenshots() {
   });
   console.log('✓ Saved: store-assets/icon-store.png');
 
+  // Extension icons
+  const iconsDir = path.join(__dirname, '..', 'assets', 'icons');
+
+  // Icon 16x16
+  console.log('Capturing icon16.png (16x16)...');
+  await page.setViewport({ width: 16, height: 16 });
+  await page.goto(`file://${path.join(assetsDir, 'icon-16.html')}`);
+  await page.screenshot({
+    path: path.join(iconsDir, 'icon16.png'),
+    type: 'png',
+  });
+  console.log('✓ Saved: assets/icons/icon16.png');
+
+  // Icon 48x48
+  console.log('Capturing icon48.png (48x48)...');
+  await page.setViewport({ width: 48, height: 48 });
+  await page.goto(`file://${path.join(assetsDir, 'icon-48.html')}`);
+  await page.screenshot({
+    path: path.join(iconsDir, 'icon48.png'),
+    type: 'png',
+  });
+  console.log('✓ Saved: assets/icons/icon48.png');
+
+  // Icon 128x128
+  console.log('Capturing icon128.png (128x128)...');
+  await page.setViewport({ width: 128, height: 128 });
+  await page.goto(`file://${path.join(assetsDir, 'icon-128.html')}`);
+  await page.screenshot({
+    path: path.join(iconsDir, 'icon128.png'),
+    type: 'png',
+  });
+  console.log('✓ Saved: assets/icons/icon128.png');
+
   await browser.close();
   console.log('\nDone! Images saved to store-assets/');
 }
