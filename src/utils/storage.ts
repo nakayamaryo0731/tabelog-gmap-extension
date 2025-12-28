@@ -4,6 +4,7 @@ import type { Settings, ApiKeyStatus, CacheData, CacheEntry } from '@/types';
 const DEFAULT_SETTINGS: Settings = {
   enabled: true,
   showReviewCount: true,
+  mode: 'link-only',
 };
 
 const DEFAULT_API_KEY_STATUS: ApiKeyStatus = {

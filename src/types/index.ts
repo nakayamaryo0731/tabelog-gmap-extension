@@ -20,10 +20,13 @@ export interface StorageSchema {
   cache: CacheData;
 }
 
+export type DisplayMode = 'link-only' | 'rating';
+
 export interface Settings {
   apiKey?: string;
   enabled: boolean;
   showReviewCount: boolean;
+  mode: DisplayMode;
 }
 
 export interface ApiKeyStatus {

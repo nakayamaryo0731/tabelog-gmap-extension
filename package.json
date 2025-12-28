@@ -1,6 +1,6 @@
 {
   "name": "tabelog-gmap-extension",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Chrome extension to show Google Map ratings on Tabelog restaurant pages",
   "type": "module",
   "scripts": {

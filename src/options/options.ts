@@ -1,3 +1,4 @@
+import type { DisplayMode } from '@/types';
 import {
   getSettings,
   saveSettings,
@@ -49,8 +50,8 @@ async function init(): Promise<void> {
   const settings = await getSettings();
   const apiKeyStatus = await getApiKeyStatus();
 
-  // モード選択を設定
-  const mode = settings.apiKey && apiKeyStatus.isValid ? 'rating' : 'link-only';
+  // モード選択を設定（保存されたmodeを使用）
+  const mode = settings.mode;
   const modeInput = document.querySelector<HTMLInputElement>(
     `input[name="mode"][value="${mode}"]`
   );
@@ -88,8 +89,11 @@ async function init(): Promise<void> {
 function setupEventListeners(): void {
   // モード切り替え
   modeInputs.forEach((input) => {
-    input.addEventListener('change', () => {
-      updateApiKeySectionVisibility(input.value);
+    input.addEventListener('change', async () => {
+      const newMode = input.value as DisplayMode;
+      updateApiKeySectionVisibility(newMode);
+      // モード設定を保存
+      await saveSettings({ mode: newMode });
     });
   });
 

@@ -1,7 +1,7 @@
 import type { Message, MessageResponse, PlaceResult } from '@/types';
 import { parseRestaurantPage, isRestaurantDetailPage } from './parser';
 import { generateGoogleMapsSearchUrl } from '@/utils/url';
-import { getApiKey, getApiKeyStatus } from '@/utils/storage';
+import { getSettings, getApiKeyStatus } from '@/utils/storage';
 import { injectUI, updateUI } from './ui';
 import './styles.css';
 
@@ -28,18 +28,18 @@ async function main(): Promise<void> {
   // Google Maps URLを生成（フォールバック用）
   const googleMapsUrl = generateGoogleMapsSearchUrl(info.name, info.address);
 
-  // APIキーの確認
-  const apiKey = await getApiKey();
+  // 設定とAPIキーステータスの確認
+  const settings = await getSettings();
   const apiKeyStatus = await getApiKeyStatus();
 
-  // APIキーが設定されていない、または無効な場合はリンクのみ
-  if (!apiKey || !apiKeyStatus.isValid) {
-    console.log('[Tabelog x Google Map] No valid API key, using link-only mode');
+  // リンクモードが選択されている場合、または評価モードでもAPIキーが無効な場合はリンクのみ
+  if (settings.mode === 'link-only' || !settings.apiKey || !apiKeyStatus.isValid) {
+    console.log('[Tabelog x Google Map] Using link-only mode');
     injectUI({ mode: 'link-only', url: googleMapsUrl });
     return;
   }
 
-  // APIキーがある場合は評価を取得
+  // 評価モードでAPIキーが有効な場合は評価を取得
   console.log('[Tabelog x Google Map] API key found, fetching rating');
   injectUI({ mode: 'loading' });
 
